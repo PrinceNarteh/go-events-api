@@ -8,5 +8,6 @@ import (
 func main() {
 	server := gin.Default()
 	server.GET("/events", controllers.GetEvents)
+	server.POST("/events", controllers.CreateEvent)
 	server.Run(":4000")
 }
