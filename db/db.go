@@ -29,10 +29,9 @@ func createTables() {
         location TEXT NOT NULL,
         date_time DATETIME NOT NULL,
         user_id INTEGER
-    )
-    `
-	_, err := DB.Exec(createEventsTable)
-	if err != nil {
+    );`
+
+	if _, err := DB.Exec(createEventsTable); err != nil {
 		panic("Could not create events table")
 	}
 }
