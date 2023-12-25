@@ -1,37 +1,43 @@
 package db
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"time"
 
-	_ "github.com/mattn/go-sqlite3"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var DB *sql.DB
-
-func InitDB() {
-	DB, err := sql.Open("sqlite3", "api.db")
-	if err != nil {
-		panic("Could not connect to database")
-	}
-
-	DB.SetMaxOpenConns(10)
-	DB.SetMaxIdleConns(5)
-
-	createTables()
+type DB struct {
+	client   *mongo.Client
+	database *mongo.Database
 }
 
-func createTables() {
-	createEventsTable := `
-    CREATE TABLE IF NOT EXISTS events (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        description TEXT NOT NULL,
-        location TEXT NOT NULL,
-        date_time DATETIME NOT NULL,
-        user_id INTEGER
-    );`
+func InitDB() *DB {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	if _, err := DB.Exec(createEventsTable); err != nil {
-		panic("Could not create events table")
+	fmt.Println(os.Getenv("MONGO_URI"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
+	if err != nil {
+		log.Fatal("Error connecting database")
 	}
+
+	if err = client.Ping(ctx, readpref.Primary()); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Database connected successfully!")
+	return &DB{
+		client:   client,
+		database: client.Database(os.Getenv("DB_NAME")),
+	}
+}
+
+func (db *DB) GetCollection(collectionName string) *mongo.Collection {
+	return db.database.Collection(collectionName)
 }
