@@ -12,6 +12,11 @@ func GetEvents(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, events)
 }
 
+func GetAllEvents(ctx *gin.Context) {
+	events := models.GetAllEvents()
+	ctx.JSON(http.StatusOK, events)
+}
+
 func CreateEvent(ctx *gin.Context) {
 	var event models.Event
 	err := ctx.ShouldBindJSON(event)
