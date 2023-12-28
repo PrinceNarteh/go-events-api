@@ -1,23 +1,21 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"os"
 
+	"github.com/PrinceNarteh/go-events-api/configs"
 	"github.com/PrinceNarteh/go-events-api/controllers"
-	"github.com/PrinceNarteh/go-events-api/db"
+	"github.com/PrinceNarteh/go-events-api/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	// load environment variables
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	utils.LoadEnv()
+	fmt.Println(os.Getenv("MONGO_URI"))
 
 	// initialize database
-	db.InitDB()
+	configs.InitDB()
 
 	server := gin.Default()
 	server.GET("/events", controllers.GetEvents)

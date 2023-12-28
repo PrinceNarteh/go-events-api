@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/PrinceNarteh/go-events-api/db"
+	"github.com/PrinceNarteh/go-events-api/configs"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -19,7 +19,7 @@ type Event struct {
 }
 
 var events = []Event{}
-var eventsCollection = db.InitDB().GetCollection("events")
+var eventsCollection = configs.InitDB().GetCollection("events")
 
 func (evt Event) save() {
 	events = append(events, evt)

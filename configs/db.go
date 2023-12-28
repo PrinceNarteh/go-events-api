@@ -1,4 +1,4 @@
-package db
+package configs
 
 import (
 	"context"
@@ -7,10 +7,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/PrinceNarteh/go-events-api/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
+
+var mongoURI = os.Getenv("MONGO_URI")
 
 type DB struct {
 	client   *mongo.Client
@@ -18,10 +21,10 @@ type DB struct {
 }
 
 func InitDB() *DB {
+	utils.LoadEnv()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	fmt.Println(os.Getenv("MONGO_URI"))
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
 	if err != nil {
 		log.Fatal("Error connecting database")
