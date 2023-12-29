@@ -1,15 +1,16 @@
 package controllers
 
 import (
-	"fmt"
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/PrinceNarteh/go-events-api/models"
-	"github.com/go-playground/validator/v10"
+	"github.com/PrinceNarteh/go-events-api/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
-var validate *validator.Validate
+var eventsCollection = "events"
 
 func GetEvents(ctx *fiber.Ctx) error {
 	var events []models.Event
@@ -21,31 +22,18 @@ func GetAllEvents(ctx *fiber.Ctx) error {
 }
 
 func CreateEvent(ctx *fiber.Ctx) error {
-	validate = validator.New(validator.WithRequiredStructEnabled())
 	var event models.Event
 	if err := ctx.BodyParser(&event); err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"message": err})
-
 	}
 
-	if ValidationErr := validate.Struct(&event); ValidationErr != nil {
-		for _, err := range ValidationErr.(validator.ValidationErrors) {
+	event.DateTime = time.Now()
 
-			fmt.Println(err.Namespace())
-			fmt.Println(err.Field())
-			fmt.Println(err.StructNamespace())
-			fmt.Println(err.StructField())
-			fmt.Println(err.Tag())
-			fmt.Println(err.ActualTag())
-			fmt.Println(err.Kind())
-			fmt.Println(err.Type())
-			fmt.Println(err.Value())
-			fmt.Println(err.Param())
-			fmt.Println()
-		}
-		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"message": ValidationErr})
+	if errs := utils.ValidateStruct(&event); len(errs) > 0 {
+		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": errs})
 	}
 
-	fmt.Println(event)
+	event.Create(context.Background(), eventsCollection, &event)
+
 	return ctx.Status(http.StatusCreated).JSON(fiber.Map{"message": event})
 }
