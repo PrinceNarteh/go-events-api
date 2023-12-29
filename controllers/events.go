@@ -5,24 +5,24 @@ import (
 	"net/http"
 
 	"github.com/PrinceNarteh/go-events-api/models"
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
-func GetEvents(ctx *gin.Context) {
+func GetEvents(ctx *fiber.Ctx) error {
 	var events []models.Event
-	ctx.JSON(http.StatusOK, events)
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{"message": events})
 }
 
-func GetAllEvents(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, "All Events")
+func GetAllEvents(ctx *fiber.Ctx) error {
+	return ctx.JSON(http.StatusOK, "All Events")
 }
 
-func CreateEvent(ctx *gin.Context) {
+func CreateEvent(ctx *fiber.Ctx) error {
 	var event models.Event
-	if err := ctx.ShouldBindJSON(event); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
-		return
+	if err := ctx.BodyParser(event); err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"message": err})
+
 	}
 	fmt.Println(event)
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Event created"})
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{"message": event})
 }
