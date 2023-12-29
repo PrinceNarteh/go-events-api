@@ -5,12 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/PrinceNarteh/go-events-api/configs"
+	"github.com/PrinceNarteh/go-events-api/mongorm"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Event struct {
-	ID          int       `json:"id"`
+	mongorm.Model
 	Name        string    `json:"name" binding:"required"`
 	Description string    `json:"description" binding:"required"`
 	Location    string    `json:"location" binding:"required"`
@@ -19,7 +19,7 @@ type Event struct {
 }
 
 var events = []Event{}
-var eventsCollection = configs.InitDB().GetCollection("events")
+var eventsCollection = mongorm.InitDB().GetCollection("events")
 
 func (evt Event) save() {
 	events = append(events, evt)
