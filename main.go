@@ -6,12 +6,11 @@ import (
 
 	"github.com/PrinceNarteh/go-events-api/configs"
 	"github.com/PrinceNarteh/go-events-api/controllers"
-	"github.com/PrinceNarteh/go-events-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	utils.LoadEnv()
+	configs.LoadEnv()
 	fmt.Println(os.Getenv("MONGO_URI"))
 
 	// initialize database

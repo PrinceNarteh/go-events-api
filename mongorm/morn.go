@@ -1,4 +1,4 @@
-package configs
+package mongorm
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/PrinceNarteh/go-events-api/utils"
+	"github.com/PrinceNarteh/go-events-api/configs"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -21,7 +21,7 @@ type DB struct {
 }
 
 func InitDB() *DB {
-	utils.LoadEnv()
+	configs.LoadEnv()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
