@@ -8,9 +8,9 @@ import (
 
 type Event struct {
 	mongorm.Model
-	Name        string    `json:"name" binding:"required"`
-	Description string    `json:"description" binding:"required"`
-	Location    string    `json:"location" binding:"required"`
-	DateTime    time.Time `json:"date_time" binding:"required"`
+	Name        string    `json:"name" validate:"required"`
+	Description string    `json:"description" validate:"required"`
+	Location    string    `json:"location" validate:"required"`
+	DateTime    time.Time `json:"date_time" validate:"required"`
 	UserID      int       `json:"user_id"`
 }

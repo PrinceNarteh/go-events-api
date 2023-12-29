@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/PrinceNarteh/go-events-api/configs"
-	"github.com/PrinceNarteh/go-events-api/controllers"
 	"github.com/PrinceNarteh/go-events-api/mongorm"
+	"github.com/PrinceNarteh/go-events-api/routes"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,8 +13,12 @@ func main() {
 	// initialize database
 	mongorm.InitDB()
 
+	// Fiber instance
 	app := fiber.New()
-	app.Get("/events", controllers.GetEvents)
-	app.Post("/events", controllers.CreateEvent)
+
+	// Routes
+	routes.EventsRoutes(app)
+
+	// Listening to Port
 	app.Listen(":4000")
 }
