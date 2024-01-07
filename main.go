@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	configs.LoadEnv()
+	configs.InitEnvConfigs()
 
 	// initialize database
 	mongorm.InitDB()

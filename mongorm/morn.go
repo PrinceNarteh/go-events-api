@@ -21,11 +21,10 @@ type DB struct {
 }
 
 func InitDB() *DB {
-	configs.LoadEnv()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(configs.EnvConfigs.MongoURI))
 	if err != nil {
 		log.Fatal("Error connecting database")
 	}
@@ -37,7 +36,7 @@ func InitDB() *DB {
 	fmt.Println("Database connected successfully!")
 	return &DB{
 		client:   client,
-		database: client.Database(os.Getenv("DB_NAME")),
+		database: client.Database(configs.EnvConfigs.DBName),
 	}
 }
 
