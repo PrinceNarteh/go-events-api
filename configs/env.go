@@ -14,10 +14,6 @@ type envConfigs struct {
 }
 
 func InitEnvConfigs() {
-	EnvConfigs = LoadEnvVariables()
-}
-
-func LoadEnvVariables() (config *envConfigs) {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
@@ -26,9 +22,7 @@ func LoadEnvVariables() (config *envConfigs) {
 		log.Fatal("Error reading env file", err)
 	}
 
-	if err := viper.Unmarshal(&config); err != nil {
+	if err := viper.Unmarshal(&EnvConfigs); err != nil {
 		log.Fatal(err)
 	}
-
-	return
 }

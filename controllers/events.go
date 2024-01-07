@@ -14,6 +14,7 @@ var eventsCollection = "events"
 
 func GetEvents(ctx *fiber.Ctx) error {
 	var events []models.Event
+
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{"message": events})
 }
 
