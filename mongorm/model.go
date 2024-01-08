@@ -19,7 +19,7 @@ type FindOptions struct {
 }
 
 func (m *Model) Find(ctx context.Context, collectionName string, opts bson.M) (docs []bson.M, err error) {
-	col := InitDB().GetCollection(collectionName)
+	col := GetCollection(collectionName)
 	cur, err := col.Find(ctx, bson.M{"name": "Xmas Beach"})
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (m *Model) Find(ctx context.Context, collectionName string, opts bson.M) (d
 }
 
 func (m *Model) Create(ctx context.Context, collectionName string, model interface{}) error {
-	col := InitDB().GetCollection(collectionName)
+	col := GetCollection(collectionName)
 
 	m.CreatedAt = time.Now()
 	m.UpdatedAt = time.Now()

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/PrinceNarteh/go-events-api/configs"
@@ -13,14 +12,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var mongoURI = os.Getenv("MONGO_URI")
+var DBConfigs *dbConfigs
 
-type DB struct {
-	client   *mongo.Client
-	database *mongo.Database
+type dbConfigs struct {
+	Client   *mongo.Client
+	Database *mongo.Database
 }
 
-func InitDB() *DB {
+func InitDB() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -34,12 +33,13 @@ func InitDB() *DB {
 	}
 
 	fmt.Println("Database connected successfully!")
-	return &DB{
-		client:   client,
-		database: client.Database(configs.EnvConfigs.DBName),
+
+	DBConfigs = &dbConfigs{
+		Client:   client,
+		Database: client.Database(configs.EnvConfigs.DBName),
 	}
 }
 
-func (db *DB) GetCollection(collectionName string) *mongo.Collection {
-	return db.database.Collection(collectionName)
+func GetCollection(collectionName string) *mongo.Collection {
+	return DBConfigs.Database.Collection(collectionName)
 }
