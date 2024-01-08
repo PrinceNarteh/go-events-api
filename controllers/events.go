@@ -13,9 +13,12 @@ import (
 var eventsCollection = "events"
 
 func GetEvents(ctx *fiber.Ctx) error {
-	var events []models.Event
-
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{"message": events})
+	var events models.Event
+	doc, err := events.Find(context.Background(), eventsCollection)
+	if err != nil {
+		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err})
+	}
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{"message": doc})
 }
 
 func GetAllEvents(ctx *fiber.Ctx) error {
