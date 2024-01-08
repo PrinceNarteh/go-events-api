@@ -8,13 +8,14 @@ import (
 	"github.com/PrinceNarteh/go-events-api/models"
 	"github.com/PrinceNarteh/go-events-api/utils"
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var eventsCollection = "events"
 
 func GetEvents(ctx *fiber.Ctx) error {
 	var events models.Event
-	doc, err := events.Find(context.Background(), eventsCollection)
+	doc, err := events.Find(context.Background(), eventsCollection, bson.M{"name": "Xmas Beach"})
 	if err != nil {
 		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	}
