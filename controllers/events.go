@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"net/http"
 	"time"
 
@@ -15,7 +14,7 @@ var eventsCollection = "events"
 
 func GetEvents(ctx *fiber.Ctx) error {
 	var events models.Event
-	doc, err := events.Find(context.Background(), eventsCollection, bson.M{"name": "Xmas Beach"})
+	doc, err := events.Find(ctx.Context(), eventsCollection, bson.M{"name": "Xmas Beach"})
 	if err != nil {
 		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err})
 	}
@@ -38,7 +37,7 @@ func CreateEvent(ctx *fiber.Ctx) error {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"error": errs})
 	}
 
-	event.Create(context.Background(), eventsCollection, &event)
+	event.Create(ctx.Context(), eventsCollection, &event)
 
 	return ctx.Status(http.StatusCreated).JSON(fiber.Map{"message": event})
 }

@@ -14,13 +14,10 @@ type Model struct {
 	UpdatedAt time.Time          `bson:"updated_at" json:"updated_at"`
 }
 
-type FindOptions struct {
-	Filter interface{}
-}
+func (m *Model) Find(ctx context.Context, collectionName string, filter interface{}) (docs []bson.M, err error) {
+	collection := GetCollection(collectionName)
 
-func (m *Model) Find(ctx context.Context, collectionName string, opts bson.M) (docs []bson.M, err error) {
-	col := GetCollection(collectionName)
-	cur, err := col.Find(ctx, bson.M{"name": "Xmas Beach"})
+	cur, err := collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
